@@ -20,4 +20,9 @@ public class User {
 
     private String role;
     private boolean enabled = false;
+
+    private String imageUrl;
+    private String name;
+    private AuthProvider provider;
+    private String providerId;
 }

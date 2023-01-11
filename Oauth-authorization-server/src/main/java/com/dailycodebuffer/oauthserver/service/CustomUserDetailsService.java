@@ -1,7 +1,9 @@
 package com.dailycodebuffer.oauthserver.service;
 
 import com.dailycodebuffer.oauthserver.entity.User;
+import com.dailycodebuffer.oauthserver.exception.ResourceNotFoundException;
 import com.dailycodebuffer.oauthserver.repository.UserRepository;
+import com.dailycodebuffer.oauthserver.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
@@ -45,6 +47,14 @@ public class CustomUserDetailsService implements UserDetailsService {
                 true,
                 getAuthorities(List.of(user.getRole()))
         );
+    }
+
+    public UserDetails loadUserById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("User", "id", id)
+        );
+
+        return UserPrincipal.create(user);
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(List<String> roles) {
